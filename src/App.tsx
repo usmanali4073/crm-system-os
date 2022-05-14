@@ -1,24 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+const Button = React.lazy(() => import('MFE1/Button'));
 
 function App() {
+  //show alert on click
+  const showAlert = () => {
+    alert('Hello World');
+  };
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Main Page</h1>
+      <React.Suspense fallback={<div>Button Component Did not load...</div>}>
+        <Button changeName={showAlert}/>
+      </React.Suspense>
+      {process.env.name}
     </div>
   );
 }
