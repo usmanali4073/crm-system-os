@@ -1,6 +1,6 @@
-import React from 'react';
+import { lazy, useEffect, useState } from 'react';
 
-function loadComponent(scope, module) {
+export function loadComponent(scope, module) {
     return async () => {
       // Initializes the share scope. This fills it with known provided modules from this build and all remotes
       // eslint-disable-next-line no-undef
@@ -17,10 +17,10 @@ function loadComponent(scope, module) {
   
   const urlCache = new Set();
   const useDynamicScript = url => {
-    const [ready, setReady] = React.useState(false);
-    const [errorLoading, setErrorLoading] = React.useState(false);
+    const [ready, setReady] = useState(false);
+    const [errorLoading, setErrorLoading] = useState(false);
   
-    React.useEffect(() => {
+    useEffect(() => {
       if (!url) return;
   
       if (urlCache.has(url)) {
@@ -62,25 +62,34 @@ function loadComponent(scope, module) {
     };
   };
   
+  /**
+ * Generates a table head
+ * @param {string} remoteUrl - Remote Url for Entrypoint http://localhost:3000/
+ * @param {string} scope - Entrypoint Scope Name MFA1
+ * @param {string} module - Expose Module Name (./Button)
+ */
   const componentCache = new Map();
   export const useFederatedComponent = (remoteUrl, scope, module) => {
     const key = `${remoteUrl}-${scope}-${module}`;
-    const [Component, setComponent] = React.useState(null);
+    const [Component, setComponent] = useState(null);
   
     const { ready, errorLoading } = useDynamicScript(remoteUrl);
-    React.useEffect(() => {
+    useEffect(() => {
       if (Component) setComponent(null);
       // Only recalculate when key changes
+      // eslint-disable-next-line
     }, [key]);
   
-    React.useEffect(() => {
+    useEffect(() => {
       if (ready && !Component) {
-        const Comp = React.lazy(loadComponent(scope, module));
+        const Comp = lazy(loadComponent(scope, module));
         componentCache.set(key, Comp);
         setComponent(Comp);
       }
       // key includes all dependencies (scope/module)
+      // eslint-disable-next-line
     }, [Component, ready, key]);
   
     return { errorLoading, Component };
   };
+
