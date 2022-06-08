@@ -41,7 +41,7 @@ module.exports = {
       name: 'app',
       remotes: {
         MFE1:
-          'MFE1@http://10.0.0.3:8083/remoteEntry.js',
+          'MFE1@http://10.0.0.13:8083/remoteEntry.js',
       },
       
     }),
